@@ -32,6 +32,31 @@ interface Stats {
   listingsByCategory: Record<string, number>;
 }
 
+const CATEGORY_LABELS: Record<string, string> = {
+  'machinery': 'Machinery',
+  'agri-inputs': 'Agri Inputs',
+  'agri-implements': 'Agri Implements',
+  'big-animals': 'Big Animals',
+  'small-animals': 'Small Animals',
+  'horses': 'Horses',
+  'livestock': 'Livestock',
+  'plants': 'Plants',
+  'poultry': 'Poultry',
+  'aquaculture': 'Aquaculture',
+  'land': 'Land',
+  'vet-services': 'Veterinary',
+  'fruit-plants': 'Fruit Plants',
+  'timber': 'Timber & Forest',
+  'feed-fodder': 'Feed & Fodder',
+  'grains-crops': 'Grains & Crops',
+  'dairy': 'Dairy Products',
+  'vegetables': 'Vegetables',
+  'fruits': 'Fruits',
+};
+
+const formatCategory = (cat: string) =>
+  CATEGORY_LABELS[cat] ?? cat.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+
 type Tab = 'overview' | 'listings' | 'users';
 
 export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
@@ -59,10 +84,16 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
     const allListings: Listing[] = listingsRes.data || [];
     const allUsers: Profile[] = profilesRes.data || [];
 
-    // Compute stats
-    const byCategory: Record<string, number> = {};
+    // Compute stats — seed all 18 categories with 0 first
+    const byCategory: Record<string, number> = Object.fromEntries(
+      Object.keys(CATEGORY_LABELS).map((k) => [k, 0])
+    );
     allListings.forEach((l) => {
-      byCategory[l.category] = (byCategory[l.category] || 0) + 1;
+      if (l.category in byCategory) {
+        byCategory[l.category] += 1;
+      } else {
+        byCategory[l.category] = (byCategory[l.category] || 0) + 1;
+      }
     });
 
     setStats({
@@ -167,7 +198,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                       .sort(([, a], [, b]) => b - a)
                       .map(([cat, count]) => (
                         <div key={cat} className="flex items-center gap-3">
-                          <span className="text-sm text-gray-600 w-36 capitalize">{cat.replace(/-/g, ' ')}</span>
+                          <span className="text-sm text-gray-600 w-36">{formatCategory(cat)}</span>
                           <div className="flex-1 bg-gray-100 rounded-full h-2">
                             <div
                               className="bg-[#00401A] h-2 rounded-full"
@@ -203,7 +234,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                         <td className="px-4 py-3 font-medium text-gray-800 max-w-[200px] truncate">
                           {resolveTitle(l.title)}
                         </td>
-                        <td className="px-4 py-3 text-gray-600 capitalize">{l.category}</td>
+                        <td className="px-4 py-3 text-gray-600">{formatCategory(l.category)}</td>
                         <td className="px-4 py-3 text-gray-800">Rs {l.price?.toLocaleString()}</td>
                         <td className="px-4 py-3 text-gray-600">{l.district || l.province || '—'}</td>
                         <td className="px-4 py-3">
