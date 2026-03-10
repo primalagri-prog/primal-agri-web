@@ -1,22 +1,28 @@
 import Link from 'next/link';
 
 const CATEGORIES = [
-  { emoji: '🐄', name: 'Livestock', ur: 'مویشی' },
-  { emoji: '🐔', name: 'Poultry', ur: 'مرغی' },
   { emoji: '🚜', name: 'Machinery', ur: 'مشینری' },
-  { emoji: '🌾', name: 'Grains & Crops', ur: 'اجناس' },
-  { emoji: '🌿', name: 'Plants', ur: 'پودے' },
-  { emoji: '🍎', name: 'Fruits', ur: 'پھل' },
-  { emoji: '🥬', name: 'Vegetables', ur: 'سبزیاں' },
-  { emoji: '🏞️', name: 'Land', ur: 'زمین' },
-  { emoji: '🐟', name: 'Aquaculture', ur: 'مچھلی' },
-  { emoji: '🥛', name: 'Dairy', ur: 'ڈیری' },
-  { emoji: '🌱', name: 'Agri Inputs', ur: 'زرعی مواد' },
+  { emoji: '🌱', name: 'Agri Inputs', ur: 'زرعی اجزاء' },
   { emoji: '🔧', name: 'Agri Implements', ur: 'زرعی آلات' },
+  { emoji: '🐄', name: 'Big Animals', ur: 'بڑے جانور' },
+  { emoji: '🐑', name: 'Small Animals', ur: 'چھوٹے جانور' },
+  { emoji: '🐎', name: 'Horses', ur: 'گھوڑے' },
+  { emoji: '🌿', name: 'Plants', ur: 'پودے' },
+  { emoji: '🐔', name: 'Poultry', ur: 'پولٹری' },
+  { emoji: '🐟', name: 'Aquaculture', ur: 'مچھلی منڈی' },
+  { emoji: '🏞️', name: 'Land', ur: 'زمین' },
+  { emoji: '💉', name: 'Veterinary', ur: 'ویٹرنری خدمات' },
+  { emoji: '🌳', name: 'Fruit Plants', ur: 'پھل دار پودے' },
+  { emoji: '🪵', name: 'Timber & Forest', ur: 'ٹمبر اور جنگلات' },
+  { emoji: '🌾', name: 'Feed & Fodder', ur: 'چارہ اور خوراک' },
+  { emoji: '🥣', name: 'Grains & Crops', ur: 'اناج اور فصلیں' },
+  { emoji: '🥛', name: 'Dairy Products', ur: 'ڈیری مصنوعات' },
+  { emoji: '🥬', name: 'Vegetables', ur: 'سبزیاں' },
+  { emoji: '🍎', name: 'Fruits', ur: 'پھل' },
 ];
 
 const STEPS = [
-  { step: '1', title: 'Browse', desc: 'Explore thousands of listings across 16 categories', ur: 'تلاش کریں' },
+  { step: '1', title: 'Browse', desc: 'Explore thousands of listings across 18 categories', ur: 'تلاش کریں' },
   { step: '2', title: 'Contact Seller', desc: 'Call or WhatsApp the seller directly — no middleman', ur: 'بیچنے والے سے بات کریں' },
   { step: '3', title: 'Deal Done', desc: 'Agree on price and complete your transaction', ur: 'سودا طے کریں' },
 ];
@@ -59,7 +65,7 @@ export default function HomePage() {
       {/* Categories */}
       <section className="py-16 px-6 bg-gray-50">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl font-bold text-center text-gray-800 mb-2">16 Categories</h2>
+          <h2 className="text-3xl font-bold text-center text-gray-800 mb-2">18 Categories</h2>
           <p className="text-center text-gray-500 mb-10">Everything in agriculture, all in one place</p>
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4">
             {CATEGORIES.map((cat) => (
