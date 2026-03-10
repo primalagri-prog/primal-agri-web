@@ -1,30 +1,63 @@
 import Link from 'next/link';
+import {
+  Tractor,
+  Sprout,
+  Wrench,
+  Beef,
+  Rabbit,
+  Footprints,
+  Leaf,
+  Egg,
+  Fish,
+  MapPin,
+  Stethoscope,
+  TreeDeciduous,
+  Trees,
+  Wheat,
+  ShoppingBasket,
+  Milk,
+  Vegan,
+  Apple,
+  Search,
+  Phone,
+  Handshake,
+  Banknote,
+  MessageCircle,
+  LocateFixed,
+} from 'lucide-react';
 
 const CATEGORIES = [
-  { emoji: '🚜', name: 'Machinery', ur: 'مشینری' },
-  { emoji: '🌱', name: 'Agri Inputs', ur: 'زرعی اجزاء' },
-  { emoji: '🔧', name: 'Agri Implements', ur: 'زرعی آلات' },
-  { emoji: '🐄', name: 'Big Animals', ur: 'بڑے جانور' },
-  { emoji: '🐑', name: 'Small Animals', ur: 'چھوٹے جانور' },
-  { emoji: '🐎', name: 'Horses', ur: 'گھوڑے' },
-  { emoji: '🌿', name: 'Plants', ur: 'پودے' },
-  { emoji: '🐔', name: 'Poultry', ur: 'پولٹری' },
-  { emoji: '🐟', name: 'Aquaculture', ur: 'مچھلی منڈی' },
-  { emoji: '🏞️', name: 'Land', ur: 'زمین' },
-  { emoji: '💉', name: 'Veterinary', ur: 'ویٹرنری خدمات' },
-  { emoji: '🌳', name: 'Fruit Plants', ur: 'پھل دار پودے' },
-  { emoji: '🪵', name: 'Timber & Forest', ur: 'ٹمبر اور جنگلات' },
-  { emoji: '🌾', name: 'Feed & Fodder', ur: 'چارہ اور خوراک' },
-  { emoji: '🥣', name: 'Grains & Crops', ur: 'اناج اور فصلیں' },
-  { emoji: '🥛', name: 'Dairy Products', ur: 'ڈیری مصنوعات' },
-  { emoji: '🥬', name: 'Vegetables', ur: 'سبزیاں' },
-  { emoji: '🍎', name: 'Fruits', ur: 'پھل' },
+  { icon: Tractor,        name: 'Machinery',       ur: 'مشینری' },
+  { icon: Sprout,         name: 'Agri Inputs',     ur: 'زرعی اجزاء' },
+  { icon: Wrench,         name: 'Agri Implements', ur: 'زرعی آلات' },
+  { icon: Beef,           name: 'Big Animals',     ur: 'بڑے جانور' },
+  { icon: Rabbit,         name: 'Small Animals',   ur: 'چھوٹے جانور' },
+  { icon: Footprints,     name: 'Horses',          ur: 'گھوڑے' },
+  { icon: Leaf,           name: 'Plants',          ur: 'پودے' },
+  { icon: Egg,            name: 'Poultry',         ur: 'پولٹری' },
+  { icon: Fish,           name: 'Aquaculture',     ur: 'مچھلی منڈی' },
+  { icon: MapPin,         name: 'Land',            ur: 'زمین' },
+  { icon: Stethoscope,    name: 'Veterinary',      ur: 'ویٹرنری خدمات' },
+  { icon: TreeDeciduous,  name: 'Fruit Plants',    ur: 'پھل دار پودے' },
+  { icon: Trees,          name: 'Timber & Forest', ur: 'ٹمبر اور جنگلات' },
+  { icon: Wheat,          name: 'Feed & Fodder',   ur: 'چارہ اور خوراک' },
+  { icon: ShoppingBasket, name: 'Grains & Crops',  ur: 'اناج اور فصلیں' },
+  { icon: Milk,           name: 'Dairy Products',  ur: 'ڈیری مصنوعات' },
+  { icon: Vegan,          name: 'Vegetables',      ur: 'سبزیاں' },
+  { icon: Apple,          name: 'Fruits',          ur: 'پھل' },
 ];
 
 const STEPS = [
-  { step: '1', title: 'Browse', desc: 'Explore thousands of listings across 18 categories', ur: 'تلاش کریں' },
-  { step: '2', title: 'Contact Seller', desc: 'Call or WhatsApp the seller directly — no middleman', ur: 'بیچنے والے سے بات کریں' },
-  { step: '3', title: 'Deal Done', desc: 'Agree on price and complete your transaction', ur: 'سودا طے کریں' },
+  { step: '1', icon: Search,      title: 'Browse',         desc: 'Explore thousands of listings across 18 categories', ur: 'تلاش کریں' },
+  { step: '2', icon: Phone,       title: 'Contact Seller', desc: 'Call or WhatsApp the seller directly — no middleman', ur: 'بیچنے والے سے بات کریں' },
+  { step: '3', icon: Handshake,   title: 'Deal Done',      desc: 'Agree on price and complete your transaction', ur: 'سودا طے کریں' },
+];
+
+const FEATURES = [
+  { icon: Banknote,     title: 'Free to Use',    desc: 'No listing fees, no commission' },
+  { icon: MessageCircle, title: 'Direct Contact', desc: 'Call or WhatsApp sellers instantly' },
+  { icon: Search,       title: 'Urdu Search',    desc: 'Search in Urdu or English' },
+  { icon: LocateFixed,  title: 'Location Based', desc: 'Find listings near your district' },
 ];
 
 export default function HomePage() {
@@ -57,7 +90,7 @@ export default function HomePage() {
           href="https://play.google.com/store/apps"
           className="bg-white text-[#00401A] px-8 py-4 rounded-full font-bold text-lg hover:bg-green-50 transition shadow-lg inline-block"
         >
-          📱 Download on Google Play
+          Download on Google Play
         </a>
         <p className="text-green-400 text-sm mt-6">Free · No commission · Direct contact</p>
       </section>
@@ -73,7 +106,9 @@ export default function HomePage() {
                 key={cat.name}
                 className="bg-white rounded-2xl p-4 text-center shadow-sm hover:shadow-md transition"
               >
-                <div className="text-3xl mb-2">{cat.emoji}</div>
+                <div className="flex justify-center mb-2">
+                  <cat.icon size={28} className="text-[#00401A]" />
+                </div>
                 <div className="text-xs font-semibold text-gray-700">{cat.name}</div>
                 <div className="text-xs text-gray-400 mt-1">{cat.ur}</div>
               </div>
@@ -90,8 +125,8 @@ export default function HomePage() {
           <div className="grid md:grid-cols-3 gap-8">
             {STEPS.map((s) => (
               <div key={s.step} className="text-center">
-                <div className="w-14 h-14 rounded-full bg-[#00401A] text-white text-2xl font-bold flex items-center justify-center mx-auto mb-4">
-                  {s.step}
+                <div className="w-14 h-14 rounded-full bg-[#00401A] text-white flex items-center justify-center mx-auto mb-4">
+                  <s.icon size={24} />
                 </div>
                 <h3 className="text-xl font-bold text-gray-800 mb-2">{s.title}</h3>
                 <p className="text-gray-500 text-sm mb-1">{s.desc}</p>
@@ -107,14 +142,11 @@ export default function HomePage() {
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-10">Why Primal Agri?</h2>
           <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-6">
-            {[
-              { icon: '🆓', title: 'Free to Use', desc: 'No listing fees, no commission' },
-              { icon: '📞', title: 'Direct Contact', desc: 'Call or WhatsApp sellers instantly' },
-              { icon: '🔍', title: 'Urdu Search', desc: 'Search in Urdu or English' },
-              { icon: '📍', title: 'Location Based', desc: 'Find listings near your district' },
-            ].map((f) => (
+            {FEATURES.map((f) => (
               <div key={f.title} className="bg-white/10 rounded-2xl p-6 text-center">
-                <div className="text-4xl mb-3">{f.icon}</div>
+                <div className="flex justify-center mb-3">
+                  <f.icon size={36} className="text-green-300" />
+                </div>
                 <div className="font-bold text-lg mb-1">{f.title}</div>
                 <div className="text-green-200 text-sm">{f.desc}</div>
               </div>
