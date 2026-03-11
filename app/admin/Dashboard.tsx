@@ -30,6 +30,7 @@ interface Stats {
   expiredListings: number;
   totalUsers: number;
   listingsByCategory: Record<string, number>;
+  listingsBySubCategory: Record<string, Record<string, number>>;
 }
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -66,6 +67,15 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const [users, setUsers] = useState<Profile[]>([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
+
+  const toggleCategory = (cat: string) => {
+    setExpandedCategories((prev) => {
+      const next = new Set(prev);
+      next.has(cat) ? next.delete(cat) : next.add(cat);
+      return next;
+    });
+  };
 
   const resolveTitle = (title: any): string => {
     if (typeof title === 'string') return title;
@@ -88,11 +98,16 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
     const byCategory: Record<string, number> = Object.fromEntries(
       Object.keys(CATEGORY_LABELS).map((k) => [k, 0])
     );
+    const bySubCategory: Record<string, Record<string, number>> = {};
     allListings.forEach((l) => {
       if (l.category in byCategory) {
         byCategory[l.category] += 1;
       } else {
         byCategory[l.category] = (byCategory[l.category] || 0) + 1;
+      }
+      if (l.sub_category) {
+        if (!bySubCategory[l.category]) bySubCategory[l.category] = {};
+        bySubCategory[l.category][l.sub_category] = (bySubCategory[l.category][l.sub_category] || 0) + 1;
       }
     });
 
@@ -102,6 +117,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
       expiredListings: allListings.filter((l) => l.status === 'expired').length,
       totalUsers: allUsers.length,
       listingsByCategory: byCategory,
+      listingsBySubCategory: bySubCategory,
     });
 
     setListings(allListings);
@@ -193,21 +209,56 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                 {/* Listings by Category */}
                 <div className="bg-white rounded-xl p-5 shadow-sm">
                   <h3 className="font-semibold text-gray-800 mb-4">Listings by Category</h3>
-                  <div className="space-y-2">
+                  <div className="space-y-1">
                     {Object.entries(stats.listingsByCategory)
                       .sort(([, a], [, b]) => b - a)
-                      .map(([cat, count]) => (
-                        <div key={cat} className="flex items-center gap-3">
-                          <span className="text-sm text-gray-600 w-36">{formatCategory(cat)}</span>
-                          <div className="flex-1 bg-gray-100 rounded-full h-2">
+                      .map(([cat, count]) => {
+                        const subCats = stats.listingsBySubCategory[cat];
+                        const hasSubCats = subCats && Object.keys(subCats).length > 0;
+                        const isExpanded = expandedCategories.has(cat);
+                        return (
+                          <div key={cat}>
+                            {/* Category row */}
                             <div
-                              className="bg-[#00401A] h-2 rounded-full"
-                              style={{ width: `${(count / stats.totalListings) * 100}%` }}
-                            />
+                              className={`flex items-center gap-3 py-1.5 px-2 rounded-lg ${hasSubCats ? 'cursor-pointer hover:bg-gray-50' : ''}`}
+                              onClick={() => hasSubCats && toggleCategory(cat)}
+                            >
+                              <span className="text-sm text-gray-600 w-36 flex items-center gap-1">
+                                {hasSubCats && (
+                                  <span className="text-gray-400 text-xs">{isExpanded ? '▼' : '▶'}</span>
+                                )}
+                                {formatCategory(cat)}
+                              </span>
+                              <div className="flex-1 bg-gray-100 rounded-full h-2">
+                                <div
+                                  className="bg-[#00401A] h-2 rounded-full"
+                                  style={{ width: stats.totalListings ? `${(count / stats.totalListings) * 100}%` : '0%' }}
+                                />
+                              </div>
+                              <span className="text-sm font-semibold text-gray-700 w-8 text-right">{count}</span>
+                            </div>
+                            {/* Subcategory rows */}
+                            {isExpanded && subCats && (
+                              <div className="ml-8 mt-1 mb-2 space-y-1">
+                                {Object.entries(subCats)
+                                  .sort(([, a], [, b]) => b - a)
+                                  .map(([sub, subCount]) => (
+                                    <div key={sub} className="flex items-center gap-3 py-1">
+                                      <span className="text-xs text-gray-500 w-32">{formatCategory(sub)}</span>
+                                      <div className="flex-1 bg-gray-100 rounded-full h-1.5">
+                                        <div
+                                          className="bg-[#22C55E] h-1.5 rounded-full"
+                                          style={{ width: count ? `${(subCount / count) * 100}%` : '0%' }}
+                                        />
+                                      </div>
+                                      <span className="text-xs text-gray-500 w-8 text-right">{subCount}</span>
+                                    </div>
+                                  ))}
+                              </div>
+                            )}
                           </div>
-                          <span className="text-sm font-semibold text-gray-700 w-8 text-right">{count}</span>
-                        </div>
-                      ))}
+                        );
+                      })}
                   </div>
                 </div>
               </div>
