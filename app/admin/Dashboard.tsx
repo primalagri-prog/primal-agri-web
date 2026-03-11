@@ -41,6 +41,7 @@ interface Stats {
   totalUsers: number;
   listingsByCategory: Record<string, number>;
   listingsBySubCategory: Record<string, Record<string, number>>;
+  listingsByBreed: Record<string, Record<string, number>>;
 }
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -49,7 +50,30 @@ const KNOWN_SUB_CATEGORIES: Record<string, string[]> = {
   'big-animals':   ['cow', 'buffalo', 'camel'],
   'small-animals': ['goat', 'sheep', 'dumba'],
   'horses':        ['horse'],
-  'poultry':       ['broiler', 'layer', 'desi-murgi', 'turkey', 'duck', 'peacock'],
+  'poultry':       ['desi-chicken', 'broiler', 'eggs', 'chicks', 'poultry-other'],
+};
+
+const KNOWN_BREEDS: Record<string, string[]> = {
+  'cow':     ['sahiwal', 'cholistani', 'brahman', 'friesian', 'cross', 'jersey', 'dhanni', 'tharparkar', 'other'],
+  'buffalo': ['nili-ravi', 'kundi', 'azi-kheli', 'cross', 'other'],
+  'camel':   ['marecha', 'brela', 'thari', 'lassi', 'other'],
+  'goat':    ['beetal', 'gulabi', 'kamori', 'teddy', 'barbari', 'nachi', 'rajanpuri', 'desi', 'other'],
+  'sheep':   ['lohi', 'salt-range', 'thalli', 'kajli', 'balochi', 'hashtnagri', 'dumani', 'other'],
+  'horse':   ['desi', 'nukrai', 'thoroughbred', 'arabian', 'cross', 'other'],
+};
+
+const BREED_LABELS: Record<string, string> = {
+  'sahiwal': 'Sahiwal', 'cholistani': 'Cholistani', 'brahman': 'Brahman',
+  'friesian': 'Friesian', 'jersey': 'Jersey', 'dhanni': 'Dhanni',
+  'tharparkar': 'Tharparkar', 'nili-ravi': 'Nili Ravi', 'kundi': 'Kundi',
+  'azi-kheli': 'Azi Kheli', 'marecha': 'Marecha', 'brela': 'Brela',
+  'thari': 'Thari', 'lassi': 'Lassi', 'beetal': 'Beetal', 'gulabi': 'Gulabi',
+  'kamori': 'Kamori', 'teddy': 'Teddy', 'barbari': 'Barbari', 'nachi': 'Nachi',
+  'rajanpuri': 'Rajanpuri', 'lohi': 'Lohi', 'salt-range': 'Salt Range',
+  'thalli': 'Thalli', 'kajli': 'Kajli', 'balochi': 'Balochi',
+  'hashtnagri': 'Hashtnagri', 'dumani': 'Dumani', 'nukrai': 'Nukrai',
+  'thoroughbred': 'Thoroughbred', 'arabian': 'Arabian',
+  'cross': 'Cross Breed', 'desi': 'Desi', 'other': 'Other',
 };
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -139,6 +163,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
+  const [expandedSubCategories, setExpandedSubCategories] = useState<Set<string>>(new Set());
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [lastRefresh, setLastRefresh] = useState(new Date());
@@ -147,6 +172,14 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
     setExpandedCategories((prev) => {
       const next = new Set(prev);
       next.has(cat) ? next.delete(cat) : next.add(cat);
+      return next;
+    });
+  };
+
+  const toggleSubCategory = (sub: string) => {
+    setExpandedSubCategories((prev) => {
+      const next = new Set(prev);
+      next.has(sub) ? next.delete(sub) : next.add(sub);
       return next;
     });
   };
@@ -172,11 +205,25 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
       ])
     );
 
+    // Pre-seed known breeds (sub_category → breed → count)
+    const byBreed: Record<string, Record<string, number>> = Object.fromEntries(
+      Object.entries(KNOWN_BREEDS).map(([sub, breeds]) => [
+        sub,
+        Object.fromEntries(breeds.map((b) => [b, 0])),
+      ])
+    );
+
     allListings.forEach((l) => {
       byCategory[l.category] = (byCategory[l.category] || 0) + 1;
       if (l.sub_category) {
         if (!bySubCategory[l.category]) bySubCategory[l.category] = {};
         bySubCategory[l.category][l.sub_category] = (bySubCategory[l.category][l.sub_category] || 0) + 1;
+        // Breed level (form_fields.breed)
+        const breed = (l as any).form_fields?.breed;
+        if (breed && KNOWN_BREEDS[l.sub_category]) {
+          if (!byBreed[l.sub_category]) byBreed[l.sub_category] = {};
+          byBreed[l.sub_category][breed] = (byBreed[l.sub_category][breed] || 0) + 1;
+        }
       }
     });
 
@@ -187,6 +234,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
       totalUsers: allUsers.length,
       listingsByCategory: byCategory,
       listingsBySubCategory: bySubCategory,
+      listingsByBreed: byBreed,
     });
 
     // Auto-expand all categories that have sub-categories
@@ -398,15 +446,46 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                     </div>
                     {isExpanded && subCats && (
                       <div className="ml-10 mb-1 space-y-1">
-                        {Object.entries(subCats).sort(([, a], [, b]) => b - a).map(([sub, subCount]) => (
-                          <div key={sub} className="flex items-center gap-3 py-1 px-2">
-                            <span className="text-slate-500 text-xs w-32 shrink-0">{formatCategory(sub)}</span>
-                            <div className="flex-1 bg-slate-700/30 rounded-full h-1">
-                              <div className="bg-emerald-400/60 h-1 rounded-full" style={{ width: count ? `${(subCount / count) * 100}%` : '0%' }} />
+                        {Object.entries(subCats).sort(([, a], [, b]) => b - a).map(([sub, subCount]) => {
+                          const breeds = stats.listingsByBreed[sub];
+                          const hasBreeds = breeds && Object.keys(breeds).length > 0;
+                          const subExpanded = expandedSubCategories.has(sub);
+                          return (
+                            <div key={sub}>
+                              <div
+                                className={`flex items-center gap-3 py-1 px-2 rounded-lg ${hasBreeds ? 'cursor-pointer hover:bg-slate-700/20' : ''}`}
+                                onClick={() => hasBreeds && toggleSubCategory(sub)}
+                              >
+                                <span className="text-slate-500 text-xs w-32 flex items-center gap-1 shrink-0">
+                                  {hasBreeds && (
+                                    <ChevronRight size={10} className={`text-slate-600 transition-transform ${subExpanded ? 'rotate-90' : ''}`} />
+                                  )}
+                                  {!hasBreeds && <span className="w-2.5" />}
+                                  {formatCategory(sub)}
+                                </span>
+                                <div className="flex-1 bg-slate-700/30 rounded-full h-1">
+                                  <div className="bg-emerald-400/60 h-1 rounded-full" style={{ width: count ? `${(subCount / count) * 100}%` : '0%' }} />
+                                </div>
+                                <span className="text-slate-500 text-xs w-7 text-right shrink-0">{subCount}</span>
+                              </div>
+                              {subExpanded && breeds && (
+                                <div className="ml-8 space-y-0.5">
+                                  {Object.entries(breeds).sort(([, a], [, b]) => b - a).map(([breed, breedCount]) => (
+                                    <div key={breed} className="flex items-center gap-3 py-0.5 px-2">
+                                      <span className="text-slate-600 text-xs w-28 shrink-0">
+                                        {BREED_LABELS[breed] ?? breed}
+                                      </span>
+                                      <div className="flex-1 bg-slate-700/20 rounded-full h-0.5">
+                                        <div className="bg-emerald-300/40 h-0.5 rounded-full" style={{ width: subCount ? `${(breedCount / subCount) * 100}%` : '0%' }} />
+                                      </div>
+                                      <span className="text-slate-600 text-xs w-7 text-right shrink-0">{breedCount}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
                             </div>
-                            <span className="text-slate-500 text-xs w-7 text-right shrink-0">{subCount}</span>
-                          </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     )}
                   </div>
