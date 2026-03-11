@@ -45,6 +45,13 @@ interface Stats {
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
+const KNOWN_SUB_CATEGORIES: Record<string, string[]> = {
+  'big-animals':   ['cow', 'buffalo', 'camel'],
+  'small-animals': ['goat', 'sheep', 'dumba'],
+  'horses':        ['horse'],
+  'poultry':       ['broiler', 'layer', 'desi-murgi', 'turkey', 'duck', 'peacock'],
+};
+
 const CATEGORY_LABELS: Record<string, string> = {
   // Top-level categories
   'machinery': 'Machinery', 'agri-inputs': 'Agri Inputs',
@@ -157,7 +164,13 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
     const byCategory: Record<string, number> = Object.fromEntries(
       Object.keys(CATEGORY_LABELS).map((k) => [k, 0])
     );
-    const bySubCategory: Record<string, Record<string, number>> = {};
+    // Pre-seed known sub-categories so they appear even with 0 listings
+    const bySubCategory: Record<string, Record<string, number>> = Object.fromEntries(
+      Object.entries(KNOWN_SUB_CATEGORIES).map(([cat, subs]) => [
+        cat,
+        Object.fromEntries(subs.map((s) => [s, 0])),
+      ])
+    );
 
     allListings.forEach((l) => {
       byCategory[l.category] = (byCategory[l.category] || 0) + 1;
@@ -175,6 +188,9 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
       listingsByCategory: byCategory,
       listingsBySubCategory: bySubCategory,
     });
+
+    // Auto-expand all categories that have sub-categories
+    setExpandedCategories(new Set(Object.keys(bySubCategory)));
 
     setListings(allListings);
     setUsers(allUsers);
