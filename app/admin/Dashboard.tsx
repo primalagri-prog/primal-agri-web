@@ -76,8 +76,8 @@ const BREED_LABELS: Record<string, string> = {
   'cross': 'Cross Breed', 'desi': 'Desi', 'other': 'Other',
 };
 
+// Top-level categories only — used to initialise byCategory counts
 const CATEGORY_LABELS: Record<string, string> = {
-  // Top-level categories
   'machinery': 'Machinery', 'agri-inputs': 'Agri Inputs',
   'agri-implements': 'Agri Implements', 'big-animals': 'Big Animals',
   'small-animals': 'Small Animals', 'horses': 'Horses',
@@ -86,19 +86,25 @@ const CATEGORY_LABELS: Record<string, string> = {
   'fruit-plants': 'Fruit Plants', 'timber': 'Timber & Forest',
   'feed-fodder': 'Feed & Fodder', 'grains-crops': 'Grains & Crops',
   'dairy': 'Dairy Products', 'vegetables': 'Vegetables', 'fruits': 'Fruits',
-  // Sub-categories — big animals
+};
+
+// Sub-category labels — NOT included in CATEGORY_LABELS to avoid top-level duplication
+const SUB_CATEGORY_LABELS: Record<string, string> = {
   'cow': 'Cow', 'buffalo': 'Buffalo', 'camel': 'Camel',
-  // Sub-categories — small animals
   'goat': 'Goat', 'sheep': 'Sheep', 'dumba': 'Dumba',
-  // Sub-categories — horses
   'horse': 'Horse',
-  // Sub-categories — poultry
-  'broiler': 'Broiler', 'layer': 'Layer', 'desi-murgi': 'Desi Murgi',
-  'turkey': 'Turkey', 'duck': 'Duck', 'peacock': 'Peacock',
+  'desi-chicken': 'Desi Chicken', 'broiler': 'Broiler', 'eggs': 'Eggs',
+  'chicks': 'Chicks', 'poultry-other': 'Other',
+  'tractors': 'Tractors', 'harvesting': 'Harvesting', 'hauling': 'Transport',
+  'solar-pumping': 'Solar & Pumping', 'construction': 'Construction', 'spare-parts': 'Spare Parts',
+  'agricultural': 'Agricultural', 'orchard': 'Orchards', 'farmhouse': 'Farm House', 'dairy-poultry': 'Dairy/Poultry',
+  'tillage': 'Ploughs & Harrows', 'seed-drills': 'Seed Drills', 'irrigation': 'Pumps & Irrigation',
+  'sprayers': 'Sprayers', 'threshers': 'Threshers', 'trailers': 'Trailers & Trolleys',
 };
 
 const formatCategory = (cat: string) =>
-  CATEGORY_LABELS[cat] ?? cat.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+  CATEGORY_LABELS[cat] ?? SUB_CATEGORY_LABELS[cat] ?? BREED_LABELS[cat]
+  ?? cat.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 
 const resolveTitle = (title: any): string => {
   if (typeof title === 'string') return title;
