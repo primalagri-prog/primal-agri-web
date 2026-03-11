@@ -287,6 +287,53 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
         <KpiCard title="Total Listings"    value={stats?.totalListings ?? 0}   delta="+15%" deltaUp={true}  color="bg-purple-500"  icon={BarChart3} />
       </div>
 
+      {/* New Listings Feed */}
+      {(() => {
+        const today = new Date().toDateString();
+        const recent = listings.filter((l) => new Date(l.created_at).toDateString() === today);
+        const last48h = listings.filter((l) => Date.now() - new Date(l.created_at).getTime() < 48 * 60 * 60 * 1000);
+        const displayed = recent.length > 0 ? recent : last48h.slice(0, 10);
+        const label = recent.length > 0 ? `${recent.length} new today` : `${displayed.length} in last 48 h`;
+        return (
+          <div className="bg-slate-800/40 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-5">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Clock size={15} className="text-emerald-400" />
+                <h3 className="text-white font-semibold text-sm">New Listings</h3>
+                <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-semibold border border-emerald-500/30">{label}</span>
+              </div>
+            </div>
+            {displayed.length === 0 ? (
+              <p className="text-slate-500 text-sm text-center py-4">No new listings yet today</p>
+            ) : (
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-3 max-h-56 overflow-y-auto pr-1">
+                {displayed.map((l) => {
+                  const seller = users.find((u) => u.id === l.user_id);
+                  return (
+                    <div key={l.id} className="bg-slate-700/30 border border-slate-700/50 rounded-xl p-3 flex flex-col gap-2">
+                      {l.images?.[0] ? (
+                        <img src={l.images[0]} alt="" className="w-full h-20 object-cover rounded-lg border border-slate-700/50" />
+                      ) : (
+                        <div className="w-full h-20 rounded-lg bg-slate-700/50 flex items-center justify-center border border-slate-700/50">
+                          <Image size={20} className="text-slate-600" />
+                        </div>
+                      )}
+                      <div>
+                        <div className="text-slate-200 text-xs font-medium truncate">{resolveTitle(l.title)}</div>
+                        <div className="text-emerald-400 text-xs font-semibold">Rs {l.price?.toLocaleString()}</div>
+                        <div className="text-slate-500 text-xs truncate">{formatCategory(l.category)}</div>
+                        {seller && <div className="text-slate-500 text-xs truncate">{seller.full_name}</div>}
+                      </div>
+                      <StatusBadge status={l.status} />
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        );
+      })()}
+
       {/* Main content row */}
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Category breakdown — 2/3 width */}
@@ -418,63 +465,77 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-slate-700/50">
-              {['Listing', 'Category', 'Price', 'Location', 'Status', 'Date', 'Actions'].map((h) => (
+              {['Listing', 'Seller', 'Category', 'Price', 'Location', 'Status', 'Date', 'Actions'].map((h) => (
                 <th key={h} className="text-left px-4 py-3 text-slate-500 text-xs font-medium uppercase tracking-wider">{h}</th>
               ))}
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-700/30">
-            {(searchQuery ? filteredListings : listings).map((l) => (
-              <tr key={l.id} className="hover:bg-slate-700/20 transition">
-                <td className="px-4 py-3">
-                  <div className="flex items-center gap-3">
-                    {l.images?.[0] ? (
-                      <img src={l.images[0]} alt="" className="w-9 h-9 rounded-lg object-cover border border-slate-700/50 shrink-0" />
-                    ) : (
-                      <div className="w-9 h-9 rounded-lg bg-slate-700/50 border border-slate-700/50 flex items-center justify-center shrink-0">
-                        <Image size={14} className="text-slate-500" />
+            {(searchQuery ? filteredListings : listings).map((l) => {
+              const seller = users.find((u) => u.id === l.user_id);
+              return (
+                <tr key={l.id} className="hover:bg-slate-700/20 transition">
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-3">
+                      {l.images?.[0] ? (
+                        <img src={l.images[0]} alt="" className="w-9 h-9 rounded-lg object-cover border border-slate-700/50 shrink-0" />
+                      ) : (
+                        <div className="w-9 h-9 rounded-lg bg-slate-700/50 border border-slate-700/50 flex items-center justify-center shrink-0">
+                          <Image size={14} className="text-slate-500" />
+                        </div>
+                      )}
+                      <span className="text-slate-200 font-medium max-w-[160px] truncate">{resolveTitle(l.title)}</span>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 rounded-lg bg-emerald-500/20 border border-emerald-500/20 flex items-center justify-center shrink-0">
+                        <span className="text-emerald-400 text-xs font-bold">{(seller?.full_name || '?')[0].toUpperCase()}</span>
                       </div>
-                    )}
-                    <span className="text-slate-200 font-medium max-w-[160px] truncate">{resolveTitle(l.title)}</span>
-                  </div>
-                </td>
-                <td className="px-4 py-3">
-                  <span className="text-slate-400 text-xs">{formatCategory(l.category)}</span>
-                </td>
-                <td className="px-4 py-3 text-emerald-400 font-semibold">Rs {l.price?.toLocaleString()}</td>
-                <td className="px-4 py-3 text-slate-400 text-xs">{l.district || l.province || '—'}</td>
-                <td className="px-4 py-3"><StatusBadge status={l.status} /></td>
-                <td className="px-4 py-3 text-slate-500 text-xs">{new Date(l.created_at).toLocaleDateString()}</td>
-                <td className="px-4 py-3">
-                  <div className="flex items-center gap-2">
-                    {l.status === 'active' ? (
+                      <div>
+                        <div className="text-slate-300 text-xs font-medium">{seller?.full_name || '—'}</div>
+                        <div className="text-slate-500 text-xs">{seller?.phone || ''}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3">
+                    <span className="text-slate-400 text-xs">{formatCategory(l.category)}</span>
+                  </td>
+                  <td className="px-4 py-3 text-emerald-400 font-semibold">Rs {l.price?.toLocaleString()}</td>
+                  <td className="px-4 py-3 text-slate-400 text-xs">{l.district || l.province || '—'}</td>
+                  <td className="px-4 py-3"><StatusBadge status={l.status} /></td>
+                  <td className="px-4 py-3 text-slate-500 text-xs">{new Date(l.created_at).toLocaleDateString()}</td>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-2">
+                      {l.status === 'active' ? (
+                        <button
+                          onClick={() => updateListingStatus(l.id, 'inactive')}
+                          disabled={actionLoading === l.id}
+                          className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-orange-500/15 hover:bg-orange-500/25 text-orange-400 text-xs font-medium transition disabled:opacity-40 border border-orange-500/20"
+                        >
+                          <XCircle size={11} /> Deactivate
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => updateListingStatus(l.id, 'active')}
+                          disabled={actionLoading === l.id}
+                          className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 text-xs font-medium transition disabled:opacity-40 border border-emerald-500/20"
+                        >
+                          <CheckCircle size={11} /> Activate
+                        </button>
+                      )}
                       <button
-                        onClick={() => updateListingStatus(l.id, 'inactive')}
+                        onClick={() => deleteListing(l.id)}
                         disabled={actionLoading === l.id}
-                        className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-orange-500/15 hover:bg-orange-500/25 text-orange-400 text-xs font-medium transition disabled:opacity-40 border border-orange-500/20"
+                        className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 transition disabled:opacity-40 border border-red-500/20"
                       >
-                        <XCircle size={11} /> Deactivate
+                        <XCircle size={13} />
                       </button>
-                    ) : (
-                      <button
-                        onClick={() => updateListingStatus(l.id, 'active')}
-                        disabled={actionLoading === l.id}
-                        className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 text-xs font-medium transition disabled:opacity-40 border border-emerald-500/20"
-                      >
-                        <CheckCircle size={11} /> Activate
-                      </button>
-                    )}
-                    <button
-                      onClick={() => deleteListing(l.id)}
-                      disabled={actionLoading === l.id}
-                      className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 transition disabled:opacity-40 border border-red-500/20"
-                    >
-                      <XCircle size={13} />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
