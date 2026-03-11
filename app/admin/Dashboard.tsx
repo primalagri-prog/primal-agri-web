@@ -46,6 +46,7 @@ interface Stats {
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const CATEGORY_LABELS: Record<string, string> = {
+  // Top-level categories
   'machinery': 'Machinery', 'agri-inputs': 'Agri Inputs',
   'agri-implements': 'Agri Implements', 'big-animals': 'Big Animals',
   'small-animals': 'Small Animals', 'horses': 'Horses',
@@ -54,6 +55,15 @@ const CATEGORY_LABELS: Record<string, string> = {
   'fruit-plants': 'Fruit Plants', 'timber': 'Timber & Forest',
   'feed-fodder': 'Feed & Fodder', 'grains-crops': 'Grains & Crops',
   'dairy': 'Dairy Products', 'vegetables': 'Vegetables', 'fruits': 'Fruits',
+  // Sub-categories — big animals
+  'cow': 'Cow', 'buffalo': 'Buffalo', 'camel': 'Camel',
+  // Sub-categories — small animals
+  'goat': 'Goat', 'sheep': 'Sheep', 'dumba': 'Dumba',
+  // Sub-categories — horses
+  'horse': 'Horse',
+  // Sub-categories — poultry
+  'broiler': 'Broiler', 'layer': 'Layer', 'desi-murgi': 'Desi Murgi',
+  'turkey': 'Turkey', 'duck': 'Duck', 'peacock': 'Peacock',
 };
 
 const formatCategory = (cat: string) =>
@@ -321,7 +331,9 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                       <div>
                         <div className="text-slate-200 text-xs font-medium truncate">{resolveTitle(l.title)}</div>
                         <div className="text-emerald-400 text-xs font-semibold">Rs {l.price?.toLocaleString()}</div>
-                        <div className="text-slate-500 text-xs truncate">{formatCategory(l.category)}</div>
+                        <div className="text-slate-500 text-xs truncate">
+                          {formatCategory(l.category)}{l.sub_category ? ` · ${formatCategory(l.sub_category)}` : ''}
+                        </div>
                         {seller && <div className="text-slate-500 text-xs truncate">{seller.full_name}</div>}
                       </div>
                       <StatusBadge status={l.status} />
@@ -499,7 +511,10 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                     </div>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-slate-400 text-xs">{formatCategory(l.category)}</span>
+                    <div className="text-slate-300 text-xs font-medium">{formatCategory(l.category)}</div>
+                    {l.sub_category && (
+                      <div className="text-slate-500 text-xs">{formatCategory(l.sub_category)}</div>
+                    )}
                   </td>
                   <td className="px-4 py-3 text-emerald-400 font-semibold">Rs {l.price?.toLocaleString()}</td>
                   <td className="px-4 py-3 text-slate-400 text-xs">{l.district || l.province || '—'}</td>
