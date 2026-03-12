@@ -127,7 +127,7 @@ const SUB_CATEGORY_LABELS: Record<string, string> = {
   'desi-chicken': 'Desi Chicken', 'broiler': 'Broiler', 'eggs': 'Eggs',
   'chicks': 'Chicks', 'poultry-other': 'Other',
   'tractors': 'Tractors', 'harvesting': 'Harvesting', 'hauling': 'Transport',
-  'solar-pumping': 'Solar & Pumping', 'construction': 'Construction', 'spare-parts': 'Spare Parts',
+  'solar-pumping': 'Solar', 'construction': 'Construction', 'spare-parts': 'Spare Parts',
   'agricultural': 'Agricultural', 'orchard': 'Orchards', 'farmhouse': 'Farm House', 'dairy-poultry': 'Dairy/Poultry',
   'tillage': 'Ploughs & Harrows', 'seed-drills': 'Seed Drills', 'irrigation': 'Pumps & Irrigation',
   'sprayers': 'Sprayers', 'threshers': 'Threshers', 'trailers': 'Trailers & Trolleys',
