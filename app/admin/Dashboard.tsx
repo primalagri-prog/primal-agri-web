@@ -221,9 +221,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const [users, setUsers] = useState<Profile[]>([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
-  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
-    () => new Set([...Object.keys(CATEGORY_LABELS), ...Object.keys(KNOWN_SUB_CATEGORIES)])
-  );
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
   const [expandedSubCategories, setExpandedSubCategories] = useState<Set<string>>(new Set());
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
