@@ -72,6 +72,7 @@ const KNOWN_BREEDS: Record<string, string[]> = {
   'buffalo': ['nili-ravi', 'kundi', 'azi-kheli', 'cross', 'other'],
   'camel':   ['marecha', 'brela', 'thari', 'lassi', 'other'],
   'goat':    ['beetal', 'gulabi', 'kamori', 'teddy', 'barbari', 'nachi', 'rajanpuri', 'desi', 'other'],
+  'dumba':   ['turki', 'balkhi', 'kandhari', 'watani', 'mundra', 'harnai'],
   'sheep':   ['lohi', 'salt-range', 'thalli', 'kajli', 'balochi', 'hashtnagri', 'dumani', 'other'],
   'horse':   ['thoroughbred', 'arabian', 'desi', 'balochi', 'other'],
 };
@@ -88,6 +89,8 @@ const BREED_LABELS: Record<string, string> = {
   'hashtnagri': 'Hashtnagri', 'dumani': 'Dumani', 'nukrai': 'Nukrai',
   'thoroughbred': 'Thoroughbred', 'arabian': 'Arabian',
   'cross': 'Cross Breed', 'desi': 'Desi', 'other': 'Other',
+  'turki': 'Turki', 'balkhi': 'Balkhi', 'kandhari': 'Kandhari',
+  'watani': 'Watani/Desi', 'mundra': 'Mundra', 'harnai': 'Harnai & Bibrik',
 };
 
 // Top-level categories only — used to initialise byCategory counts
