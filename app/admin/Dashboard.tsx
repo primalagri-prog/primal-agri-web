@@ -168,7 +168,9 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const [users, setUsers] = useState<Profile[]>([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
-  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
+    () => new Set([...Object.keys(CATEGORY_LABELS), ...Object.keys(KNOWN_SUB_CATEGORIES)])
+  );
   const [expandedSubCategories, setExpandedSubCategories] = useState<Set<string>>(new Set());
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -242,9 +244,6 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
       listingsBySubCategory: bySubCategory,
       listingsByBreed: byBreed,
     });
-
-    // Auto-expand all categories that have sub-categories
-    setExpandedCategories(new Set(Object.keys(bySubCategory)));
 
     setListings(allListings);
     setUsers(allUsers);
