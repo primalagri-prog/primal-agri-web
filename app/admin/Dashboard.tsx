@@ -47,10 +47,24 @@ interface Stats {
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const KNOWN_SUB_CATEGORIES: Record<string, string[]> = {
-  'big-animals':   ['cow', 'buffalo', 'camel'],
-  'small-animals': ['goat', 'sheep', 'dumba'],
-  'horses':        ['horse'],
-  'poultry':       ['desi-chicken', 'broiler', 'eggs', 'chicks', 'poultry-other'],
+  'big-animals':    ['cow', 'buffalo', 'camel'],
+  'small-animals':  ['goat', 'sheep', 'dumba'],
+  'horses':         ['horse'],
+  'poultry':        ['desi-chicken', 'broiler', 'eggs', 'chicks', 'poultry-other'],
+  'machinery':      ['tractors', 'harvesting', 'hauling', 'solar-pumping', 'construction', 'spare-parts'],
+  'agri-implements':['tillage', 'seed-drills', 'irrigation', 'sprayers', 'threshers', 'trailers', 'spare-parts'],
+  'land':           ['agricultural', 'orchard', 'farmhouse', 'dairy-poultry'],
+  'agri-inputs':    ['fertilizers', 'seeds', 'spray', 'animal-feed', 'farm-tools', 'bio-fertilizers'],
+  'plants':         ['decorative', 'nursery-plants', 'lawn', 'nursery-shop'],
+  'fruit-plants':   ['mangoes', 'citrus', 'guava', 'stone-fruits', 'banana', 'pomegranate', 'dates', 'apple-pear', 'grapes', 'other-fruits'],
+  'timber':         ['eucalyptus', 'shisham', 'poplar', 'chinar', 'acacia', 'other-timber'],
+  'aquaculture':    ['fingerlings', 'fish-feed', 'equipment', 'nets', 'biofloc'],
+  'feed-fodder':    ['straw-hay', 'green-fodder', 'concentrate-feed', 'silage', 'poultry-feed', 'fish-feed'],
+  'grains-crops':   ['wheat', 'rice', 'maize', 'cotton', 'sugarcane', 'pulses', 'other-crops'],
+  'dairy':          ['fresh-milk', 'desi-ghee', 'yogurt-lassi', 'butter-cream', 'paneer', 'other-dairy'],
+  'vegetables':     ['tomatoes', 'onions-garlic', 'potatoes', 'leafy-greens', 'chillies-peppers', 'gourds-squash', 'other-vegetables'],
+  'fruits':         ['mangoes', 'citrus', 'guava', 'dates', 'watermelon-melon', 'apple-pear', 'other-fruits'],
+  'vet-services':   ['livestock-vets', 'vaccination', 'artificial-insemination', 'medicines', 'deworming', 'poultry-health'],
 };
 
 const KNOWN_BREEDS: Record<string, string[]> = {
@@ -117,6 +131,28 @@ const SUB_CATEGORY_LABELS: Record<string, string> = {
   'agricultural': 'Agricultural', 'orchard': 'Orchards', 'farmhouse': 'Farm House', 'dairy-poultry': 'Dairy/Poultry',
   'tillage': 'Ploughs & Harrows', 'seed-drills': 'Seed Drills', 'irrigation': 'Pumps & Irrigation',
   'sprayers': 'Sprayers', 'threshers': 'Threshers', 'trailers': 'Trailers & Trolleys',
+  'fertilizers': 'Fertilizers', 'seeds': 'Seeds', 'spray': 'Spray', 'animal-feed': 'Animal Feed',
+  'farm-tools': 'Farm Tools', 'bio-fertilizers': 'Organic Fertilizers',
+  'decorative': 'Decorative', 'nursery-plants': 'Nursery', 'lawn': 'Lawn', 'nursery-shop': 'Nursery Shop',
+  'mangoes': 'Mangoes', 'citrus': 'Citrus', 'guava': 'Guava', 'stone-fruits': 'Stone Fruits',
+  'banana': 'Banana', 'pomegranate': 'Pomegranate', 'dates': 'Dates', 'apple-pear': 'Apple & Pear',
+  'grapes': 'Grapes', 'other-fruits': 'Other Fruits', 'watermelon-melon': 'Watermelon & Melon',
+  'eucalyptus': 'Eucalyptus', 'shisham': 'Shisham', 'poplar': 'Poplar',
+  'chinar': 'Chinar', 'acacia': 'Acacia & Bakain', 'other-timber': 'Other Timber',
+  'fingerlings': 'Fingerlings', 'fish-feed': 'Fish Feed', 'equipment': 'Equipment',
+  'nets': 'Nets', 'biofloc': 'Biofloc',
+  'straw-hay': 'Straw & Hay', 'green-fodder': 'Green Fodder', 'concentrate-feed': 'Concentrate Feed',
+  'silage': 'Silage', 'poultry-feed': 'Poultry Feed',
+  'wheat': 'Wheat', 'rice': 'Rice', 'maize': 'Maize', 'cotton': 'Cotton',
+  'sugarcane': 'Sugarcane', 'pulses': 'Pulses', 'other-crops': 'Other Crops',
+  'fresh-milk': 'Fresh Milk', 'desi-ghee': 'Desi Ghee', 'yogurt-lassi': 'Yogurt & Lassi',
+  'butter-cream': 'Butter & Cream', 'paneer': 'Farm Cheese', 'other-dairy': 'Other Dairy',
+  'tomatoes': 'Tomatoes', 'onions-garlic': 'Onions & Garlic', 'potatoes': 'Potatoes',
+  'leafy-greens': 'Leafy Greens', 'chillies-peppers': 'Chillies & Peppers',
+  'gourds-squash': 'Gourds & Squash', 'other-vegetables': 'Other Vegetables',
+  'livestock-vets': 'Livestock Vets', 'vaccination': 'Vaccination',
+  'artificial-insemination': 'Artificial Insemination', 'medicines': 'Medicines',
+  'deworming': 'Deworming & Spray', 'poultry-health': 'Poultry Health',
 };
 
 const formatCategory = (cat: string) =>
@@ -212,8 +248,8 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const loadData = useCallback(async () => {
     setLoading(true);
     const [listingsRes, profilesRes] = await Promise.all([
-      supabase.from('listings').select('*').order('created_at', { ascending: false }).limit(200),
-      supabase.from('profiles').select('id, full_name, phone, district, created_at').order('created_at', { ascending: false }).limit(200),
+      supabase.from('listings').select('*').order('created_at', { ascending: false }).limit(2000),
+      supabase.from('profiles').select('id, full_name, phone, district, created_at').order('created_at', { ascending: false }).limit(2000),
     ]);
 
     const allListings: Listing[] = listingsRes.data || [];
