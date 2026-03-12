@@ -81,12 +81,29 @@ const CATEGORY_LABELS: Record<string, string> = {
   'machinery': 'Machinery', 'agri-inputs': 'Agri Inputs',
   'agri-implements': 'Agri Implements', 'big-animals': 'Big Animals',
   'small-animals': 'Small Animals', 'horses': 'Horses',
-  'livestock': 'Livestock', 'plants': 'Plants', 'poultry': 'Poultry',
+  'plants': 'Plants', 'poultry': 'Poultry',
   'aquaculture': 'Aquaculture', 'land': 'Land', 'vet-services': 'Veterinary',
   'fruit-plants': 'Fruit Plants', 'timber': 'Timber & Forest',
   'feed-fodder': 'Feed & Fodder', 'grains-crops': 'Grains & Crops',
   'dairy': 'Dairy Products', 'vegetables': 'Vegetables', 'fruits': 'Fruits',
 };
+
+// Reverse lookup: breed value → which sub_category (animal type) it belongs to
+// Used to remap legacy listings stored as category=livestock, sub_category=<breed>
+const BREED_TO_SUB: Record<string, { category: string; sub: string }> = (() => {
+  const map: Record<string, { category: string; sub: string }> = {};
+  const catBySub: Record<string, string> = {
+    cow: 'big-animals', buffalo: 'big-animals', camel: 'big-animals',
+    goat: 'small-animals', sheep: 'small-animals', dumba: 'small-animals',
+    horse: 'horses',
+  };
+  for (const [sub, breeds] of Object.entries(KNOWN_BREEDS)) {
+    for (const breed of breeds) {
+      map[breed] = { category: catBySub[sub] ?? 'big-animals', sub };
+    }
+  }
+  return map;
+})();
 
 // Sub-category labels — NOT included in CATEGORY_LABELS to avoid top-level duplication
 const SUB_CATEGORY_LABELS: Record<string, string> = {
@@ -222,15 +239,34 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
     );
 
     allListings.forEach((l) => {
-      byCategory[l.category] = (byCategory[l.category] || 0) + 1;
-      if (l.sub_category) {
-        if (!bySubCategory[l.category]) bySubCategory[l.category] = {};
-        bySubCategory[l.category][l.sub_category] = (bySubCategory[l.category][l.sub_category] || 0) + 1;
-        // Breed level (form_fields.breed)
+      // Remap legacy category='livestock' listings to their correct category
+      let cat = l.category;
+      let sub = l.sub_category;
+      if (cat === 'livestock') {
+        if (sub && BREED_TO_SUB[sub]) {
+          // sub_category is actually a breed (old schema) — remap fully
+          const mapped = BREED_TO_SUB[sub];
+          cat = mapped.category;
+          const breedVal = sub;
+          sub = mapped.sub;
+          if (!byBreed[sub]) byBreed[sub] = {};
+          byBreed[sub][breedVal] = (byBreed[sub][breedVal] || 0) + 1;
+        } else {
+          // Unknown livestock sub — fold into big-animals
+          cat = 'big-animals';
+        }
+      }
+
+      byCategory[cat] = (byCategory[cat] || 0) + 1;
+
+      if (sub) {
+        if (!bySubCategory[cat]) bySubCategory[cat] = {};
+        bySubCategory[cat][sub] = (bySubCategory[cat][sub] || 0) + 1;
+        // Breed level from form_fields.breed (new schema)
         const breed = (l as any).form_fields?.breed;
-        if (breed && KNOWN_BREEDS[l.sub_category]) {
-          if (!byBreed[l.sub_category]) byBreed[l.sub_category] = {};
-          byBreed[l.sub_category][breed] = (byBreed[l.sub_category][breed] || 0) + 1;
+        if (breed && KNOWN_BREEDS[sub]) {
+          if (!byBreed[sub]) byBreed[sub] = {};
+          byBreed[sub][breed] = (byBreed[sub][breed] || 0) + 1;
         }
       }
     });
