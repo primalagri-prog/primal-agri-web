@@ -49,7 +49,7 @@ interface Stats {
 const KNOWN_SUB_CATEGORIES: Record<string, string[]> = {
   'big-animals':    ['cow', 'buffalo', 'camel'],
   'small-animals':  ['goat', 'sheep', 'dumba'],
-  'horses':         ['horse'],
+  'horses':         ['thoroughbred', 'arabian', 'desi', 'balochi', 'other'],
   'poultry':        ['desi-chicken', 'broiler', 'eggs', 'chicks', 'poultry-other'],
   'machinery':      ['tractors', 'harvesting', 'hauling', 'construction'],
   'agri-implements':['tillage', 'seed-drills', 'irrigation', 'sprayers', 'threshers', 'trailers', 'spare-parts', 'solar-pumping'],
@@ -73,7 +73,7 @@ const KNOWN_BREEDS: Record<string, string[]> = {
   'camel':   ['marecha', 'brela', 'thari', 'lassi', 'other'],
   'goat':    ['beetal', 'gulabi', 'kamori', 'teddy', 'barbari', 'nachi', 'rajanpuri', 'desi', 'other'],
   'sheep':   ['lohi', 'salt-range', 'thalli', 'kajli', 'balochi', 'hashtnagri', 'dumani', 'other'],
-  'horse':   ['desi', 'nukrai', 'thoroughbred', 'arabian', 'cross', 'other'],
+  'horse':   ['thoroughbred', 'arabian', 'desi', 'balochi', 'other'],
 };
 
 const BREED_LABELS: Record<string, string> = {
@@ -274,13 +274,17 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
       ])
     );
 
+    // Remap retired horse breed values to canonical ones
+    const HORSE_BREED_REMAP: Record<string, string> = {
+      nukrai: 'other', cross: 'other', baluchi: 'balochi', others: 'other',
+    };
+
     allListings.forEach((l) => {
       // Remap legacy category='livestock' listings to their correct category
       let cat = l.category;
       let sub = l.sub_category;
       if (cat === 'livestock') {
         if (sub && BREED_TO_SUB[sub]) {
-          // sub_category is actually a breed (old schema) — remap fully
           const mapped = BREED_TO_SUB[sub];
           cat = mapped.category;
           const breedVal = sub;
@@ -288,7 +292,6 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
           if (!byBreed[sub]) byBreed[sub] = {};
           byBreed[sub][breedVal] = (byBreed[sub][breedVal] || 0) + 1;
         } else {
-          // Unknown livestock sub — fold into big-animals
           cat = 'big-animals';
         }
       }
@@ -296,13 +299,22 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
       byCategory[cat] = (byCategory[cat] || 0) + 1;
 
       if (sub) {
-        if (!bySubCategory[cat]) bySubCategory[cat] = {};
-        bySubCategory[cat][sub] = (bySubCategory[cat][sub] || 0) + 1;
-        // Breed level from form_fields.breed (new schema)
-        const breed = (l as any).form_fields?.breed;
-        if (breed && KNOWN_BREEDS[sub]) {
-          if (!byBreed[sub]) byBreed[sub] = {};
-          byBreed[sub][breed] = (byBreed[sub][breed] || 0) + 1;
+        // For horses: sub_category is always 'horse' (redundant) — show breeds directly
+        if (cat === 'horses' && sub === 'horse') {
+          const rawBreed = (l as any).form_fields?.breed ?? 'other';
+          const breed = HORSE_BREED_REMAP[rawBreed] ?? rawBreed;
+          const canonical = ['thoroughbred', 'arabian', 'desi', 'balochi', 'other'].includes(breed) ? breed : 'other';
+          bySubCategory['horses'] = bySubCategory['horses'] || {};
+          bySubCategory['horses'][canonical] = (bySubCategory['horses'][canonical] || 0) + 1;
+        } else {
+          if (!bySubCategory[cat]) bySubCategory[cat] = {};
+          bySubCategory[cat][sub] = (bySubCategory[cat][sub] || 0) + 1;
+          // Breed level from form_fields.breed
+          const breed = (l as any).form_fields?.breed;
+          if (breed && KNOWN_BREEDS[sub]) {
+            if (!byBreed[sub]) byBreed[sub] = {};
+            byBreed[sub][breed] = (byBreed[sub][breed] || 0) + 1;
+          }
         }
       }
     });
