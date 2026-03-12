@@ -94,15 +94,17 @@ const BREED_LABELS: Record<string, string> = {
 };
 
 // Top-level categories only — used to initialise byCategory counts
+// Animal categories listed first
 const CATEGORY_LABELS: Record<string, string> = {
-  'machinery': 'Machinery', 'agri-inputs': 'Agri Inputs',
-  'agri-implements': 'Agri Implements', 'big-animals': 'Big Animals',
-  'small-animals': 'Small Animals', 'horses': 'Horses',
-  'plants': 'Plants', 'poultry': 'Poultry',
-  'aquaculture': 'Aquaculture', 'land': 'Land', 'vet-services': 'Veterinary',
-  'fruit-plants': 'Fruit Plants', 'timber': 'Timber & Forest',
-  'feed-fodder': 'Feed & Fodder', 'grains-crops': 'Grains & Crops',
-  'dairy': 'Dairy Products', 'vegetables': 'Vegetables', 'fruits': 'Fruits',
+  'big-animals': 'Big Animals', 'small-animals': 'Small Animals',
+  'horses': 'Horses', 'poultry': 'Poultry', 'aquaculture': 'Aquaculture',
+  'dairy': 'Dairy Products', 'vet-services': 'Veterinary',
+  'feed-fodder': 'Feed & Fodder',
+  'machinery': 'Machinery', 'agri-implements': 'Agri Implements',
+  'agri-inputs': 'Agri Inputs', 'land': 'Land',
+  'grains-crops': 'Grains & Crops', 'vegetables': 'Vegetables',
+  'fruits': 'Fruits', 'fruit-plants': 'Fruit Plants',
+  'plants': 'Plants', 'timber': 'Timber & Forest',
 };
 
 // Reverse lookup: breed value → which sub_category (animal type) it belongs to
