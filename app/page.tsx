@@ -75,12 +75,12 @@ export default function HomePage() {
         className="px-6 pt-36 pb-24 text-center"
         style={{ background: 'radial-gradient(ellipse at center, #004d20 0%, #001a0c 100%)' }}
       >
-        <p className="text-[#E3D5CA]/70 text-lg mb-3 font-medium urdu">سرگودھا کی زراعت</p>
+        <p className="text-[#E3D5CA]/70 text-lg mb-3 font-medium urdu">پاکستان کی زرعی منڈی</p>
         <h1 className="text-4xl md:text-6xl font-bold mb-4 leading-tight text-[#E3D5CA]">
-          Sargodha&apos;s Agriculture,<br />Digitally Empowered.
+          Pakistan&apos;s Agriculture,<br />Digitally Empowered.
         </h1>
         <p className="text-[#E3D5CA]/70 text-lg max-w-xl mx-auto mb-10">
-          The premier marketplace for verified livestock, high-quality seeds, and AI-driven agricultural insights. Built by farmers, for farmers.
+          The premier marketplace for verified livestock, high-quality seeds, and agricultural produce. Built by farmers, for farmers.
         </p>
         <a
           href="https://play.google.com/store/apps"
@@ -99,7 +99,7 @@ export default function HomePage() {
           <h2 className="text-3xl font-bold text-[#E3D5CA] mb-6">About Us</h2>
           <p className="text-[#E3D5CA]/80 text-lg leading-relaxed">
             Primal Agri is a homegrown initiative bridging the gap between traditional farming and modern tech.
-            Based in Sargodha, we empower sole proprietors to trade with transparency.
+            Based in Pakistan, we empower sole proprietors to trade with transparency.
           </p>
         </div>
       </section>
