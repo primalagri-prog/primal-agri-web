@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import NavBar from '@/components/NavBar';
+import HeroAnimation from '@/components/HeroAnimation';
 import {
   Tractor,
   Sprout,
@@ -67,26 +68,38 @@ export default function HomePage() {
 
       <NavBar />
 
-      {/* Hero — Forest radial gradient */}
+      {/* Hero — Forest radial gradient, split 50/50 */}
       <section
         id="hero"
-        className="px-6 pt-36 pb-24 text-center"
+        className="min-h-screen flex items-center px-6 pt-20"
         style={{ background: 'radial-gradient(ellipse at center, #005c25 0%, #00401A 60%, #002610 100%)' }}
       >
-        <p className="text-white/50 text-lg mb-3 font-medium urdu">پاکستان کی زرعی منڈی</p>
-        <h1 className="text-4xl md:text-6xl font-bold mb-4 leading-tight text-white">
-          Pakistan&apos;s Agriculture,<br />Digitally Empowered.
-        </h1>
-        <p className="text-white/60 text-lg max-w-xl mx-auto mb-10">
-          The premier marketplace for verified livestock, high-quality seeds, and agricultural produce. Built by farmers, for farmers.
-        </p>
-        <a
-          href="https://play.google.com/store/apps"
-          className="bg-[#111111] text-white px-8 rounded-full font-bold text-lg hover:bg-black transition shadow-lg inline-flex items-center min-h-[48px]"
-        >
-          Download on Google Play
-        </a>
-        <p className="text-white/30 text-sm mt-6">Free · No commission · Direct contact</p>
+        <div className="max-w-6xl mx-auto w-full flex flex-col md:flex-row items-center gap-12 py-16">
+
+          {/* Left — text */}
+          <div className="flex-1 text-left">
+            <p className="text-white/50 text-lg mb-3 font-medium urdu">پاکستان کی زرعی منڈی</p>
+            <h1 className="text-4xl md:text-6xl font-bold mb-4 leading-tight text-white">
+              Pakistan&apos;s Agriculture,<br />Digitally Empowered.
+            </h1>
+            <p className="text-white/60 text-lg max-w-md mb-10">
+              The premier marketplace for verified livestock, high-quality seeds, and agricultural produce. Built by farmers, for farmers.
+            </p>
+            <a
+              href="https://play.google.com/store/apps"
+              className="bg-[#111111] text-white px-8 rounded-full font-bold text-lg hover:bg-black transition shadow-lg inline-flex items-center min-h-[48px]"
+            >
+              Download on Google Play
+            </a>
+            <p className="text-white/30 text-sm mt-6">Free · No commission · Direct contact</p>
+          </div>
+
+          {/* Right — animation */}
+          <div className="flex-1 w-full">
+            <HeroAnimation />
+          </div>
+
+        </div>
       </section>
 
       {/* About */}

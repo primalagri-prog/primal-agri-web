@@ -26,3 +26,8 @@ h1, h2, h3 {
 .urdu {
   font-family: var(--font-arabic);
 }
+
+@keyframes heroFloat {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-12px); }
+}
