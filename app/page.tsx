@@ -74,9 +74,10 @@ export default function HomePage() {
         className="min-h-screen flex items-center px-6 pt-20"
         style={{ background: 'radial-gradient(ellipse at center, #005c25 0%, #00401A 60%, #002610 100%)' }}
       >
-        <div className="max-w-6xl mx-auto w-full flex flex-col md:flex-row items-center gap-12 py-16">
+        {/* items-end aligns both columns at the download button baseline */}
+        <div className="max-w-6xl mx-auto w-full flex flex-col md:flex-row items-end gap-12 pt-16 pb-4">
 
-          {/* Left — text */}
+          {/* Left — text; download button is the last element so it sits at the shared baseline */}
           <div className="flex-1 text-left">
             <p className="text-white/50 text-lg mb-3 font-medium urdu">پاکستان کی زرعی منڈی</p>
             <h1 className="text-4xl md:text-6xl font-bold mb-4 leading-tight text-white">
@@ -91,15 +92,17 @@ export default function HomePage() {
             >
               Download on Google Play
             </a>
-            <p className="text-white/30 text-sm mt-6">Free · No commission · Direct contact</p>
           </div>
 
-          {/* Right — animation */}
+          {/* Right — animation; stalk base sits at the shared baseline */}
           <div className="flex-1 w-full">
             <HeroAnimation />
           </div>
 
         </div>
+
+        {/* Below the split */}
+        <p className="text-white/30 text-sm text-center pb-16">Free · No commission · Direct contact</p>
       </section>
 
       {/* About */}

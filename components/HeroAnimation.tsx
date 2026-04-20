@@ -13,7 +13,7 @@ function draw(delay: string, duration = '0.6s'): React.CSSProperties {
 
 export default function HeroAnimation() {
   return (
-    <div className="flex items-start justify-center w-full h-full min-h-[380px] pt-8">
+    <div className="flex items-end justify-center w-full h-full min-h-[380px]">
       {/* Sway container — rotates around the base after drawing finishes */}
       <div
         style={{
