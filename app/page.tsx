@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import NavBar from '@/components/NavBar';
 import {
   Tractor,
   Sprout,
@@ -64,27 +65,14 @@ export default function HomePage() {
   return (
     <main className="min-h-screen">
 
-      {/* Navbar — Forest background
-          TODO: Nav transparency behaviour not specified (transparent-on-scroll vs always-Forest).
-          TODO: Bilingual toggle (EN/UR) behaviour not specified — full i18n or cosmetic label swap? */}
-      <nav className="bg-[#00401A] px-6 py-4 flex items-center justify-between border-b border-[#E3D5CA]/20">
-        <div className="flex items-center gap-3">
-          <span className="text-2xl font-bold tracking-tight text-[#E3D5CA]">Primal Agri</span>
-          <span className="text-sm text-[#E3D5CA]/70 font-medium urdu">پرائمل ایگری</span>
-        </div>
-        <a
-          href="https://play.google.com/store/apps"
-          className="bg-[#8B4513] text-[#E3D5CA] px-4 rounded-full text-sm font-semibold hover:bg-[#a0522d] transition inline-flex items-center min-h-[48px]"
-        >
-          Download App
-        </a>
-      </nav>
+      <NavBar />
 
-      {/* Hero — Dark Forest radial gradient
+      {/* Hero — Dark Forest radial gradient, pt-20 offsets the fixed nav
           TODO: Second gradient stop colour and direction not specified.
           Using dark forest centre fading to near-black edge as a reasonable default. */}
       <section
-        className="px-6 py-24 text-center"
+        id="hero"
+        className="px-6 pt-36 pb-24 text-center"
         style={{ background: 'radial-gradient(ellipse at center, #004d20 0%, #001a0c 100%)' }}
       >
         <p className="text-[#E3D5CA]/70 text-lg mb-3 font-medium urdu">سرگودھا کی زراعت</p>
@@ -106,7 +94,7 @@ export default function HomePage() {
       {/* About Section
           TODO: No background or layout specified in Refactor.md.
           Using Forest background to flow naturally from the hero. */}
-      <section className="py-16 px-6 bg-[#00401A]">
+      <section id="about" className="py-16 px-6 bg-[#00401A]">
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-3xl font-bold text-[#E3D5CA] mb-6">About Us</h2>
           <p className="text-[#E3D5CA]/80 text-lg leading-relaxed">
@@ -117,7 +105,7 @@ export default function HomePage() {
       </section>
 
       {/* Categories — Leather icons (spec: "Leather: Category icons") */}
-      <section className="py-16 px-6 bg-[#002d12]">
+      <section id="categories" className="py-16 px-6 bg-[#002d12]">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-3xl font-bold text-center text-[#E3D5CA] mb-2">18 Categories</h2>
           <p className="text-center text-[#E3D5CA]/60 mb-10">Everything in agriculture, all in one place</p>
@@ -139,7 +127,7 @@ export default function HomePage() {
       </section>
 
       {/* How It Works — Sand background, Leather "stamped" step icons */}
-      <section className="py-16 px-6 bg-[#E3D5CA]">
+      <section id="how-it-works" className="py-16 px-6 bg-[#E3D5CA]">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl font-bold text-center text-[#00401A] mb-2">How It Works</h2>
           <p className="text-center text-[#00401A]/60 mb-12">Simple, fast, and free</p>
@@ -159,7 +147,7 @@ export default function HomePage() {
       </section>
 
       {/* Why Primal Agri — White background, Forest headings, Sand border cards */}
-      <section className="py-16 px-6 bg-white">
+      <section id="why-us" className="py-16 px-6 bg-white">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl font-bold text-[#00401A] mb-10">Why Primal Agri?</h2>
           <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-6">
@@ -177,7 +165,7 @@ export default function HomePage() {
       </section>
 
       {/* Ready to Start — Navy background, Sand text */}
-      <section className="py-16 px-6 text-center bg-[#001D3D]">
+      <section id="download" className="py-16 px-6 text-center bg-[#001D3D]">
         <h2 className="text-3xl font-bold text-[#E3D5CA] mb-4">Ready to start?</h2>
         <p className="text-[#E3D5CA]/70 mb-8">
           Join thousands of farmers and dealers on Pakistan&apos;s agri marketplace
