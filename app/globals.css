@@ -27,7 +27,13 @@ h1, h2, h3 {
   font-family: var(--font-arabic);
 }
 
-@keyframes heroFloat {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-12px); }
+/* Wheat stalk — path drawing */
+@keyframes drawPath {
+  to { stroke-dashoffset: 0; }
+}
+
+/* Wheat stalk — gentle sway after drawing completes */
+@keyframes wheatSway {
+  0%, 100% { transform: rotate(-2deg); }
+  50%       { transform: rotate(2deg); }
 }

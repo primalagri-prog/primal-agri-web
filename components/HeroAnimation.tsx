@@ -1,65 +1,80 @@
-import {
-  Beef,
-  Wheat,
-  Tractor,
-  Sprout,
-  Milk,
-  Egg,
-  Fish,
-  Apple,
-  Leaf,
-} from 'lucide-react';
+// Pure SVG path-drawing animation — no client JS needed.
+// Each element uses pathLength="100" so stroke-dashoffset can animate
+// from 100 → 0 regardless of actual path length.
 
-// Each icon card floats independently with a staggered delay
-const ICONS = [
-  { icon: Tractor, delay: '0s',    duration: '3.2s', size: 22 },
-  { icon: Wheat,   delay: '0.4s',  duration: '2.8s', size: 22 },
-  { icon: Beef,    delay: '0.8s',  duration: '3.6s', size: 22 },
-  { icon: Sprout,  delay: '1.2s',  duration: '3.0s', size: 22 },
-  { icon: Leaf,    delay: '0s',    duration: '4.0s', size: 28 }, // centre — larger
-  { icon: Milk,    delay: '1.6s',  duration: '2.6s', size: 22 },
-  { icon: Egg,     delay: '0.6s',  duration: '3.4s', size: 22 },
-  { icon: Fish,    delay: '1.0s',  duration: '2.9s', size: 22 },
-  { icon: Apple,   delay: '1.4s',  duration: '3.8s', size: 22 },
-];
+function draw(delay: string, duration = '0.6s'): React.CSSProperties {
+  return {
+    strokeDasharray: 100,
+    strokeDashoffset: 100,
+    animation: `drawPath ${duration} ease-out forwards`,
+    animationDelay: delay,
+  };
+}
 
 export default function HeroAnimation() {
   return (
-    <div className="relative flex items-center justify-center w-full h-72 md:h-full md:min-h-[420px]">
-
-      {/* Faint concentric rings for depth */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="w-64 h-64 rounded-full border border-white/5" />
-        <div className="absolute w-44 h-44 rounded-full border border-white/8" />
-        <div className="absolute w-24 h-24 rounded-full border border-white/10" />
-      </div>
-
-      {/* 3×3 floating icon grid, rotated 15° for visual interest */}
+    <div className="flex items-center justify-center w-full h-full min-h-[380px]">
+      {/* Sway container — rotates around the base after drawing finishes */}
       <div
-        className="grid grid-cols-3 gap-4"
-        style={{ transform: 'rotate(15deg)' }}
+        style={{
+          transformOrigin: 'center bottom',
+          animation: 'wheatSway 4s ease-in-out infinite',
+          animationDelay: '3.5s',
+        }}
       >
-        {ICONS.map(({ icon: Icon, delay, duration, size }, i) => {
-          const isCentre = i === 4;
-          return (
-            <div
-              key={i}
-              className={`flex items-center justify-center rounded-2xl border ${
-                isCentre
-                  ? 'w-16 h-16 bg-[#00401A] border-white/20'
-                  : 'w-12 h-12 bg-[#111111] border-white/10'
-              }`}
-              style={{
-                animation: `heroFloat ${duration} ease-in-out infinite`,
-                animationDelay: delay,
-              }}
-            >
-              <Icon size={size} className="text-white" />
-            </div>
-          );
-        })}
-      </div>
+        <svg
+          viewBox="0 0 100 280"
+          fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="w-40 md:w-56 h-auto"
+          style={{ overflow: 'visible' }}
+        >
+          {/* ── Main stem ─────────────────────────────── */}
+          <path
+            d="M 50 275 L 50 75"
+            stroke="white"
+            strokeWidth="2.5"
+            pathLength="100"
+            style={draw('0s', '0.9s')}
+          />
 
+          {/* ── Leaves (alternating left / right) ──────── */}
+          <path d="M 50 235 C 38 222 18 226 10 240"
+            stroke="rgba(255,255,255,0.7)" strokeWidth="1.8" pathLength="100" style={draw('0.9s', '0.45s')} />
+          <path d="M 50 200 C 62 187 82 191 90 205"
+            stroke="rgba(255,255,255,0.7)" strokeWidth="1.8" pathLength="100" style={draw('1.1s', '0.45s')} />
+          <path d="M 50 165 C 36 150 17 154 9 168"
+            stroke="rgba(255,255,255,0.7)" strokeWidth="1.8" pathLength="100" style={draw('1.3s', '0.45s')} />
+          <path d="M 50 132 C 64 117 83 121 91 135"
+            stroke="rgba(255,255,255,0.7)" strokeWidth="1.8" pathLength="100" style={draw('1.5s', '0.45s')} />
+
+          {/* ── Grain spikelets (teardrop shapes) ───────
+               Drawn centre-first, then inner pair, then outer pair */}
+          {/* Centre */}
+          <path d="M 50 128 C 56 113 56 93 50 76 C 44 93 44 113 50 128"
+            stroke="white" strokeWidth="1.5" fill="rgba(255,255,255,0.15)" pathLength="100" style={draw('1.8s', '0.4s')} />
+          {/* Inner left */}
+          <path d="M 43 134 C 48 119 47 99 42 83 C 36 99 37 119 43 134"
+            stroke="white" strokeWidth="1.5" fill="rgba(255,255,255,0.12)" pathLength="100" style={draw('2.0s', '0.4s')} />
+          {/* Inner right */}
+          <path d="M 57 134 C 52 119 53 99 58 83 C 64 99 63 119 57 134"
+            stroke="white" strokeWidth="1.5" fill="rgba(255,255,255,0.12)" pathLength="100" style={draw('2.0s', '0.4s')} />
+          {/* Outer left */}
+          <path d="M 36 142 C 40 127 38 107 32 91 C 26 107 28 127 36 142"
+            stroke="rgba(255,255,255,0.75)" strokeWidth="1.5" fill="rgba(255,255,255,0.08)" pathLength="100" style={draw('2.2s', '0.4s')} />
+          {/* Outer right */}
+          <path d="M 64 142 C 60 127 62 107 68 91 C 74 107 72 127 64 142"
+            stroke="rgba(255,255,255,0.75)" strokeWidth="1.5" fill="rgba(255,255,255,0.08)" pathLength="100" style={draw('2.2s', '0.4s')} />
+
+          {/* ── Awns (bristles extending upward from each grain) ── */}
+          <path d="M 50 76  L 50 48"  stroke="rgba(255,255,255,0.55)" strokeWidth="1" pathLength="100" style={draw('2.6s',  '0.25s')} />
+          <path d="M 42 83  L 37 55"  stroke="rgba(255,255,255,0.45)" strokeWidth="1" pathLength="100" style={draw('2.7s',  '0.25s')} />
+          <path d="M 58 83  L 63 55"  stroke="rgba(255,255,255,0.45)" strokeWidth="1" pathLength="100" style={draw('2.7s',  '0.25s')} />
+          <path d="M 32 91  L 25 63"  stroke="rgba(255,255,255,0.35)" strokeWidth="1" pathLength="100" style={draw('2.85s', '0.25s')} />
+          <path d="M 68 91  L 75 63"  stroke="rgba(255,255,255,0.35)" strokeWidth="1" pathLength="100" style={draw('2.85s', '0.25s')} />
+        </svg>
+      </div>
     </div>
   );
 }
