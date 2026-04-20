@@ -8,11 +8,9 @@
 
 :root {
   --forest: #00401A;
-  --leather: #8B4513;
-  --sand: #E3D5CA;
-  --navy: #001D3D;
-  --background: #00401A;
-  --foreground: #E3D5CA;
+  --dark: #111111;
+  --background: #111111;
+  --foreground: #ffffff;
 }
 
 body {

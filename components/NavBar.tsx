@@ -23,14 +23,14 @@ export default function NavBar() {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 px-6 py-4 flex items-center justify-between border-b transition-all duration-300 ${
         scrolled
-          ? 'bg-[#00401A] border-[#E3D5CA]/20 shadow-lg'
+          ? 'bg-[#111111] border-white/10 shadow-lg'
           : 'bg-transparent border-transparent'
       }`}
     >
       {/* Brand */}
       <div className="flex items-center gap-3">
-        <span className="text-2xl font-bold tracking-tight text-[#E3D5CA]">Primal Agri</span>
-        <span className="text-sm text-[#E3D5CA]/70 font-medium urdu">پرائمل ایگری</span>
+        <span className="text-2xl font-bold tracking-tight text-white">Primal Agri</span>
+        <span className="text-sm text-white/50 font-medium urdu">پرائمل ایگری</span>
       </div>
 
       {/* Section links — hidden on mobile */}
@@ -39,7 +39,7 @@ export default function NavBar() {
           <a
             key={link.href}
             href={link.href}
-            className="text-[#E3D5CA]/70 hover:text-[#E3D5CA] transition"
+            className="text-white/60 hover:text-white transition"
           >
             {link.label}
           </a>
@@ -49,7 +49,7 @@ export default function NavBar() {
       {/* CTA */}
       <a
         href="https://play.google.com/store/apps"
-        className="bg-[#8B4513] text-[#E3D5CA] px-4 rounded-full text-sm font-semibold hover:bg-[#a0522d] transition inline-flex items-center min-h-[48px]"
+        className="bg-[#00401A] text-white px-4 rounded-full text-sm font-semibold hover:bg-[#005c25] transition inline-flex items-center min-h-[48px]"
       >
         Download App
       </a>
