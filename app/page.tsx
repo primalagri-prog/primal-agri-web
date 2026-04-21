@@ -71,7 +71,7 @@ export default function HomePage() {
       {/* Hero — Forest radial gradient, split 50/50 */}
       <section
         id="hero"
-        className="min-h-screen flex items-center px-6 pt-20"
+        className="min-h-screen flex flex-col justify-center px-6 pt-20"
         style={{ background: 'radial-gradient(ellipse at center, #005c25 0%, #00401A 60%, #002610 100%)' }}
       >
         {/* items-end aligns both columns at the download button baseline */}
