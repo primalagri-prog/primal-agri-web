@@ -92,17 +92,16 @@ export default function HomePage() {
             >
               Download on Google Play
             </a>
+            <p className="text-white/30 text-sm mt-6">Free · No commission · Direct contact</p>
           </div>
 
-          {/* Right — animation; stalk base sits at the shared baseline */}
-          <div className="flex-1 w-full">
+          {/* Right — pb-11 offsets the stalk base up by the height of the text below the button,
+              keeping it visually aligned with the button despite items-end on the row */}
+          <div className="flex-1 w-full pb-11">
             <HeroAnimation />
           </div>
 
         </div>
-
-        {/* Below the split */}
-        <p className="text-white/30 text-sm text-center pb-16">Free · No commission · Direct contact</p>
       </section>
 
       {/* About */}
