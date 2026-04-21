@@ -75,7 +75,7 @@ export default function HomePage() {
         style={{ background: 'radial-gradient(ellipse at center, #005c25 0%, #00401A 60%, #002610 100%)' }}
       >
         {/* items-end aligns both columns at the download button baseline */}
-        <div className="max-w-6xl mx-auto w-full flex flex-col md:flex-row items-end gap-12 pt-16 pb-4">
+        <div className="max-w-6xl mx-auto w-full flex flex-col md:flex-row items-end gap-12 pt-4 pb-4">
 
           {/* Left — text; download button is the last element so it sits at the shared baseline */}
           <div className="flex-1 text-left">
